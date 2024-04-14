@@ -1,8 +1,9 @@
 const User = require("../../models/User.js");
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
-const SignUp = asyncHandler(async (req, res, next) => {
+const SignUp = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
@@ -45,6 +46,43 @@ const SignUp = asyncHandler(async (req, res, next) => {
   }
 });
 
+const SignIn = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  //check if user is valid or not
+  const validUser = await User.findOne({ email });
+  if (!validUser) {
+    throw new Error("Invalid email or password");
+  }
+
+  //match the password from the database, if the user exists
+  const isMatch = await bcrypt.compare(password, validUser.password);
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  //Generate Token using JWT
+  const token = jwt.sign({ id: validUser?._id }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+  console.log(token);
+
+  //set the token into cookie (http only)
+  res.cookie("token", token, {
+    httpOnly: true,
+  });
+
+  //send the response
+  res.json({
+    status: "success",
+    message: "Login success",
+    _id: validUser?._id,
+    username: validUser?.username,
+    email: validUser?.email,
+  });
+});
+
 module.exports = {
   SignUp,
+  SignIn,
 };
