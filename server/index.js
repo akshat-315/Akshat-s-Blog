@@ -3,10 +3,16 @@ const authRouter = require("./routes/auth/AuthRoutes.js");
 const errorHandler = require("./middlewares/ErrorMiddleware.js");
 require("dotenv").config();
 require("./db.js")();
+const cors = require("cors");
 
 const app = express();
 
 app.use(express.json());
+const corsOption = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 5000;
 

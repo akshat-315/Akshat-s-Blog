@@ -7,6 +7,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -36,7 +37,7 @@ const SignIn = () => {
       if (data.success === false) {
         dispatch(signInFailure(data.message));
       }
-      
+
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate("/");
@@ -53,7 +54,7 @@ const SignIn = () => {
         <div className="flex-1">
           <Link to="/" className="font-bold text-4xl">
             <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white animate-pulse">
-              MERN Blog
+              Akshat's Blog
             </span>
           </Link>
           <p className="text-md mt-5 w-1/2">
@@ -98,6 +99,7 @@ const SignIn = () => {
                 "Sign In"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-3">
             <span>Already have an account?</span>
