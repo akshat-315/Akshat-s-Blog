@@ -93,7 +93,7 @@ const Google = asyncHandler(async (req, res) => {
       const { password, ...rest } = user._doc;
       res
         .status(200)
-        .cookie("access token", token, {
+        .cookie("access_token", token, {
           httpOnly: true,
         })
         .json(rest);
@@ -119,7 +119,7 @@ const Google = asyncHandler(async (req, res) => {
 
       res
         .status(200)
-        .cookie("access token", token, {
+        .cookie("access_token", token, {
           httpOnly: true,
         })
         .json(rest);
