@@ -27,7 +27,7 @@ const Header = () => {
         dispatch(signOutSuccess());
       }
     } catch (error) {
-      console.log(error.messagea);
+      console.log(error.message);
     }
   };
 

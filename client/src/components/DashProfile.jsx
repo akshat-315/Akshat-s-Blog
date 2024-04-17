@@ -1,6 +1,6 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Label, TextInput } from "flowbite-react";
 import React, { useRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -9,6 +9,7 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
+import { signOutSuccess } from "../redux/user/userSlice";
 
 const DashProfile = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -18,6 +19,7 @@ const DashProfile = () => {
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const fileRef = useRef();
+  const dispatch = useDispatch();
 
   const handleImageFile = (e) => {
     const file = e.target.files[0];
@@ -62,10 +64,28 @@ const DashProfile = () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageUrl(downloadURL);
           setImageFileUploading(false);
-          setImageFileUploadProgress(0); // Reset progress
+          setImageFileUploadProgress(0);
         });
       }
     );
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("api/v1/user/sign-out", {
+        method: "POST",
+      });
+
+      const data = res.json();
+
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signOutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -119,17 +139,36 @@ const DashProfile = () => {
           <Alert color="failure">{imageFileUploadError}</Alert>
         )}
         <div className="flex flex-col gap-4">
-          <TextInput type="text" id="username" placeholder="username" />
-          <TextInput type="email" id="email" placeholder="email" />
+          <Label value="Username" className="-mb-2 mt-2" />
+          <TextInput
+            type="text"
+            id="username"
+            placeholder={currentUser.username}
+          />
+          <Label value="Email" className="-mb-2 mt-2" />
+          <TextInput
+            type="email"
+            id="email"
+            placeholder={currentUser.username}
+            disabled
+          />
+          <Label value="Password" className="-mb-2 mt-2" />
           <TextInput type="password" id="password" placeholder="password" />
-          <Button type="submit" gradientDuoTone="purpleToBlue" outline>
+          <Button
+            type="submit"
+            gradientDuoTone="purpleToBlue"
+            outline
+            className="mt-2"
+          >
             Update
           </Button>
         </div>
       </form>
       <div className="flex justify-between mt-5 text-red-500">
         <span>Delete Account</span>
-        <span>Sign Out</span>
+        <span className="cursor-pointer" onClick={handleSignOut}>
+          Sign Out
+        </span>
       </div>
     </div>
   );
