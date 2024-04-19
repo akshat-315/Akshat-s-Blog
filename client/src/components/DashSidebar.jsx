@@ -57,15 +57,14 @@ export const DashSidebar = () => {
               Profile
             </Sidebar.Item>
           </Link>
-          <Link to="/dashboard?tab=profile">
+          <Link to="/dashboard?tab=posts">
             <Sidebar.Item
-              active={tab === "post"}
-              icon={HiUser}
-              label={"User"}
+              active={tab === "posts"}
+              icon={HiDocumentText}
               labelColor="dark"
               as="div"
             >
-              Profile
+              Posts
             </Sidebar.Item>
           </Link>
           <Sidebar.Item

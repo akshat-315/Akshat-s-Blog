@@ -3,6 +3,7 @@ import { DashSidebar } from "../components/DashSidebar";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import DashProfile from "../components/DashProfile";
+import { DashPosts } from "../components/DashPosts";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const Dashboard = () => {
         <DashSidebar />
       </div>
       {tab === "profile" && <DashProfile />}
+      {tab === "posts" && <DashPosts />}
     </div>
   );
 };
