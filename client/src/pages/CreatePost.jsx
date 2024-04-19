@@ -2,6 +2,7 @@ import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -20,7 +21,6 @@ export const CreatePost = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-
   const navigate = useNavigate();
 
   const handleUpdloadImage = async () => {
@@ -83,6 +83,24 @@ export const CreatePost = () => {
       setPublishError("Something went wrong");
     }
   };
+
+  const deleteImage = () => {
+    if (formData.image) {
+      const storage = getStorage(app);
+      const imageRef = ref(storage, formData.image);
+
+      deleteObject(imageRef)
+        .then(() => {
+          console.log("Image has been deleted");
+          setFormData({ ...formData, image: null }); // Clear image URL from form data
+        })
+        .catch((error) => {
+          console.log("There was an error deleting the file:", error);
+        });
+    }
+  };
+
+  console.log(formData);
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
@@ -107,6 +125,8 @@ export const CreatePost = () => {
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
             <option value="nextjs">Next.js</option>
+            <option value="AI/ML">AI/ML</option>
+            <option value="Others">Other</option>
           </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
@@ -121,15 +141,7 @@ export const CreatePost = () => {
             gradientDuoTone="purpleToBlue"
             type="button"
             id="cross"
-            onClick={(e) => {
-              if (file) {
-                setFile(null);
-              }
-              if (formData.image) {
-                setFormData({ ...formData, image: null });
-              }
-              console.log(file);
-            }}
+            onClick={deleteImage}
           >
             <RxCross2 />
           </Button>
