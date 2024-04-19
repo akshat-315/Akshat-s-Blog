@@ -57,6 +57,17 @@ export const DashSidebar = () => {
               Profile
             </Sidebar.Item>
           </Link>
+          <Link to="/dashboard?tab=profile">
+            <Sidebar.Item
+              active={tab === "post"}
+              icon={HiUser}
+              label={"User"}
+              labelColor="dark"
+              as="div"
+            >
+              Profile
+            </Sidebar.Item>
+          </Link>
           <Sidebar.Item
             icon={HiArrowSmRight}
             className="cursor-pointer"

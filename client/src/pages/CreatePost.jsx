@@ -13,6 +13,7 @@ import { useState } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
 
 export const CreatePost = () => {
@@ -21,6 +22,7 @@ export const CreatePost = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const handleUpdloadImage = async () => {
@@ -62,12 +64,13 @@ export const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/post/create", {
+      const res = await fetch("/api/v1/post/create-post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        Authorization: `Bearer ${currentUser.token}`,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -92,7 +95,7 @@ export const CreatePost = () => {
       deleteObject(imageRef)
         .then(() => {
           console.log("Image has been deleted");
-          setFormData({ ...formData, image: null }); // Clear image URL from form data
+          setFormData({ ...formData, image: null });
         })
         .catch((error) => {
           console.log("There was an error deleting the file:", error);
@@ -100,7 +103,7 @@ export const CreatePost = () => {
     }
   };
 
-  console.log(formData);
+  console.log(formData.content);
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
